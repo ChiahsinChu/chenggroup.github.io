@@ -207,9 +207,31 @@ Because of the advent of advanced experimental (e.g., synchrotron-based techniqu
 
 ***最后，向我第一个项目的日常导师，荷兰莱顿大学的 Dr. Katharina Doblhoff-Dier 表示诚挚的感谢。***
 
+## Useful Websites in Writing
+
+- check your vocabulary **in English**
+  - https://www.vocabulary.com
+  - https://www.oxfordlearnersdictionaries.com
+
+- synonym
+  - https://www.wordhippo.com
+  - https://www.thesaurus.com
+
+- collocation
+  - https://www.linggle.com
+  - https://netspeak.org
+
+- nice sentences
+  - https://www.phrasebank.manchester.ac.uk
+
+- rephrase your text
+  - https://quillbot.com
+
+- good translator
+  - https://www.deepl.com/translator
 
 
-# 年度汇报标准
+## 年度汇报标准
 
 研究生（博士和硕士）前两年每年应写一次汇报。汇报使用**LaTeX**撰写。模板选用revtex的AIP模板。以**英文**撰写
 
