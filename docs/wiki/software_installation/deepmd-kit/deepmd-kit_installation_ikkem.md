@@ -7,7 +7,14 @@ comments: true
 
 # DeePMD-kit安装实战：嘉庚超算
 
-嘉庚超算中心没有统一安装DeepMD-kit软件，用户使用前需要自行编译。本文参考[最佳实践](./deepmd-kit_installation_new.md)，基于嘉庚超算预装的模块进行。此处以DeepMD-kit v2.2.0版本为例。
+> 官方版本可通过以下方式调用：
+> ```bash
+> module load anaconda/2020.3
+> # choose your own version
+> source activate /public/groups/ai4ec/libs/conda/deepmd/<version>
+> ```
+
+本文参考[最佳实践](./deepmd-kit_installation_new.md)，基于嘉庚超算预装的模块进行。此处以DeepMD-kit v2.2.0版本为例。
 
 ## 初次安装
 
