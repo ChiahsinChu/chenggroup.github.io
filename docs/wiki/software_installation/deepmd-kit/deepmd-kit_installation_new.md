@@ -1,13 +1,15 @@
 ---
-title: DeepMD-kit安装最佳实践
+title: DeepMD-kit(v2)安装最佳实践
 authors: 
   - Yunpei Liu
 comments: true
 ---
 
-# DeepMD-kit安装最佳实践
+# DeepMD-kit(v2)安装最佳实践
 
-背景：以 Zeus 集群为例，在服务器通过源代码编译安装DeepMD-kit和包含完整接口的LAMMPS。虽然官方已经提供了[通过 Conda 一键安装的方法](https://deepmd.readthedocs.io/en/master/install.html#easy-installation-methods)，但由于此法所安装的各个组件均为预编译版本，因而针对课题实际情况无法做更多拓展和改动，且通过 Conda 安装的 Protobuf 存在版本冲突，无法进一步编译其他接口。这里介绍一种方法，通过 Conda 安装通常不需要改动的TensorFlow C++ Interface，其余部分仍手动编译。由于目前新版Lammps已经提供Plugin支持，DeePMD亦支持通过Plugin调用，故可令组件之间相互解耦、减少后续安装的工序。
+> 现阶段DeepMD-kit最新版本已升级至v3，但考虑到v3中放弃了对tensorflow后端的部分功能支持（如multitask），故仍保留对v2的安装指引。
+
+背景：以 Zeus 集群为例，在服务器通过源代码编译安装DeepMD-kit和包含完整接口的LAMMPS。虽然官方已经提供了[通过 Conda 一键安装的方法](https://docs.deepmodeling.com/projects/deepmd/en/r2/install/easy-install.html)，但由于此法所安装的各个组件均为预编译版本，因而针对课题实际情况无法做更多拓展和改动，且通过 Conda 安装的 Protobuf 存在版本冲突，无法进一步编译其他接口。这里介绍一种方法，通过 Conda 安装通常不需要改动的TensorFlow C++ Interface，其余部分仍手动编译。由于目前新版Lammps已经提供Plugin支持，DeePMD亦支持通过Plugin调用，故可令组件之间相互解耦、减少后续安装的工序。
 
 ## 初始环境说明
 
@@ -51,8 +53,8 @@ flowchart TB
 
    1. 建立独立的Conda环境，用 Pip 安装 TensorFlow 和 DeePMD-kit，提供势函数训练功能；
    2. 结合必要的组件、环境等编译Lammps，提供经典分子动力学模拟功能；
-   3. 编译 DeePMD C++ Interface，在此基础上编译 DeePMD-kit Lammps Plugin供Lammps调用，提供 DeePMD 模拟功能；
-   4. 编译 DeePMD CP2K API 和对应的CP2K版本（No free lunch.）
+   3. 编译 DeePMD-kit C++ Interface，在此基础上编译 DeePMD-kit Lammps Plugin供Lammps调用，提供 DeePMD-kit 模拟功能；
+   4. 编译 DeePMD-kit CP2K API 和对应的CP2K版本（No free lunch.）
 
 ## 安装DeePMD-kit Python Interface
 
@@ -75,7 +77,7 @@ module add gcc/7.4.0
 假设创建的虚拟环境名称是 `deepmd`，则请将步骤最后的 `<your env name>` 替换为 `deepmd`。若采用该步骤的设置，则虚拟环境将被创建在`/data/user/conda/env/deepmd`下（假设用户名为`user`）。
 
 ```bash
-conda create -n deepmd python=3.9
+conda create -n deepmd python=3.10
 conda activate deepmd
 ```
 
@@ -102,29 +104,22 @@ pip install --upgrade pip
 接下来安装Tensorflow的Python接口
 
 ```bash
-pip install tensorflow
+pip install tensorflow-gpu==2.10
 ```
 
  若提示已安装，请使用`--upgrade`选项进行覆盖安装。若提示权限不足，请使用`--user`选项在当前账号下安装。
 
-然后下载DeePMD-kit的源代码（注意把`v2.1.5`替换为需要安装的版本，如`v2.0.3`等）
+然后下载DeePMD-kit的源代码（可以将`r2`替换为其他版本，如`v2.2.10`等）
 
 ```bash
 cd /some/workspace
-git clone --recursive https://github.com/deepmodeling/deepmd-kit.git deepmd-kit -b v2.1.5
+git clone https://github.com/deepmodeling/deepmd-kit.git deepmd-kit -b r2
 ```
-
-在运行git clone时记得要`--recursive`，这样才可以将全部文件正确下载下来，否则在编译过程中会报错。
-
-!!! tip "提示"
-    如果不慎漏了`--recursive`， 可以采取以下的补救方法：
-    ```bash
-    git submodule update --init --recursive
-    ```
 
 若集群上 CMake 3没有安装，可以用pip进行安装：
 
 ```bash
+# make sure cmake >=3.23
 pip install cmake
 ```
 
@@ -146,12 +141,14 @@ export DP_VARIANT=cuda
 
 ```bash
 cd deepmd-kit
+# make sure numpy ver < 2
+pip install numpy==1.*
 pip install .
 ```
 
 ## 安装Lammps
 
-注意这一部分可以从DeePMD安装中解耦出来，因而兼顾对Lammps的不同需求，而不必为DeePMD专门编译一个Lammps可执行文件。
+注意这一部分可以从DeePMD-kit安装中解耦出来，因而兼顾对Lammps的不同需求，而不必为DeePMD专门编译一个Lammps可执行文件。
 
 ### 环境准备
 
